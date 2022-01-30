@@ -2687,6 +2687,98 @@ def CompletedActivity(user_id):
 
         show_weight_window.mainloop()
 
+    def custom_activity():
+        show_weight_window = Toplevel()
+        show_weight_window.geometry("1290x660")
+        show_weight_window.title('custom activity')
+        show_weight_window.iconphoto(False, PhotoImage(file=r'Window icons\weight.GIF'))
+
+        global create
+        original = Image.open(
+        r'Background images\custom_activity.png')
+        resized = original.resize((1290, 660), Image.ANTIALIAS)
+        create = ImageTk.PhotoImage(resized) # Keep a reference, prevent GC
+        tk.Label(show_weight_window, image=create).pack()
+
+        main_frame = Frame(show_weight_window)
+        main_frame.pack(fill=BOTH, expand=1)
+        my_canvas = Canvas(main_frame)
+        my_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+        my_scrollbar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=my_canvas.yview)
+        my_scrollbar.pack(side=RIGHT, fill=Y)
+        my_canvas.configure(yscrollcommand=my_scrollbar.set)
+        my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
+
+        second_frame = Frame(my_canvas)
+        my_canvas.create_window((0, 0), window=second_frame, anchor="nw")
+        big_font=('Verdana',30)
+
+        Label(show_weight_window,bg='#c8f3fc',text='Create your own custom activity',font=big_font).place(x=300,y=100)
+
+        medium_font = ('Verdana', 20)
+        small_font = ('Verdana', 15)
+        custom_activity_name = tk.Entry(show_weight_window, width=20, relief="sunken",font=medium_font )
+        custom_activity_name.insert(END,'Activity name')
+        custom_activity_name.place(x=470,y=200)
+
+        custom_activity_points = tk.Entry(show_weight_window, width=20, relief="sunken",font=medium_font )
+        custom_activity_points.insert(END,'Activity points')
+        custom_activity_points.place(x=470,y=270)
+
+        def handle_click(event):
+            custom_activity_name.delete(0, END)
+
+        def handle(event):
+            custom_activity_points.delete(0, END)
+
+        custom_activity_name.bind('<1>',handle_click)
+        custom_activity_points.bind('<1>',handle)
+
+        def insert_custom_activity():
+            try:
+                cat_name = (clicked.get())
+                activity_name = (custom_activity_name.get())
+                act_pts = int(custom_activity_points.get())
+            except:
+                tkinter.messagebox.showinfo('Error', 'Please enter points as a decimal number')
+                return
+            cur.execute('SELECT category_id FROM CATEGORY_OF_ACTIVITY WHERE category_name = ?',(cat_name,))
+            result = cur.fetchall()
+            if(len(result)==0):
+                tkinter.messagebox.showinfo('Error', 'Some unexpected error while processing category')
+                return
+            if(len(activity_name)==0):
+                tkinter.messagebox.showinfo('Error', 'Enter an activity name')
+                return
+            category_id = int(result[0][0])
+
+            cur.execute('SELECT activity_id FROM LIST_OF_ACTIVITIES WHERE activity_name = ?',(activity_name,))
+            result = cur.fetchall()
+            if(len(result)!=0):
+                tkinter.messagebox.showinfo('Error', 'That activity already exists')
+                return
+            cur.execute('SELECT count(activity_id) FROM LIST_OF_ACTIVITIES')
+            result = cur.fetchall()
+            activity_id = int(result[0][0]) + 1
+            cur.execute('INSERT INTO LIST_OF_ACTIVITIES VALUES (?,?,?,?)',(activity_id,category_id,activity_name,act_pts))
+            conn.commit()
+            tkinter.messagebox.showinfo('Success', 'Activity added')
+
+        category_names=["COMPETITIVE PROGRAMMING", 'FITNESS', 'KNOWLEDGE' ,'MIND']
+        clicked = StringVar()
+
+        # initial menu text
+        clicked.set( "COMPETITIVE PROGRAMMING" )
+
+        # Create Dropdown menu
+        drop = OptionMenu( show_weight_window , clicked , *category_names )
+        drop.place(x=550,y=340)
+
+        confirm_button=Button(show_weight_window,text='create activity', command = insert_custom_activity, activeforeground='#000000',fg='#FFFFFF',bg='#d30404',font=small_font)
+        confirm_button.place(x=580,y=400)
+        show_weight_window.mainloop()
+
     root = Toplevel()
     ############################
     # user_id = 1
@@ -2743,7 +2835,7 @@ def CompletedActivity(user_id):
                       width=40).place(x=200, y=450)
 
     button_7 = Button(root, text='Points vs Day(Graph)', command=points_for_user_by_day_graph, font=('Helvetica', 13, 'bold'),
-                      width=40).place(x=200, y=570)
+                      width=40).place(x=650, y=450)
 
     # article follow up
     button_7 = Button(root, text='Article Follow Up', command=article_follow_up, font=('Helvetica', 13, 'bold'),
@@ -2757,46 +2849,51 @@ def CompletedActivity(user_id):
     button_7 = Button(root, text='Book Follow Up', command=book_follow_up, font=('Helvetica', 13, 'bold'),
                       width=20).place(x=650, y=300)
 
-    # book follow up
-    button_7 = Button(root, text='Performance in each Hour', command=one_hour, font=('Helvetica', 13, 'bold'), width=40).place(x=200,
-                                                                                                             y=510)
+    # testing
+    #button_7 = Button(root, text='Performance in each Hour', command=one_hour, font=('Helvetica', 13, 'bold'), width=40).place(x=200,
+    #                                                                                                         y=510)
 
-    # book follow up
+    # Performance in each Hour with Activity
     button_7 = Button(root, text='Performance in each Hour with Activity', command=one_hour_with_act, font=('Helvetica', 13, 'bold'),
-                      width=40).place(x=650, y=450)
+                      width=40).place(x=200, y=510)
+
+    # custom_activity
+    button_7 = Button(root,text="Add Your Custom Activity",command=custom_activity ,font=('Helvetica', 13, 'bold'),
+    width=40).place(x=200, y=570)
 
     #########################
-    # word follow up
+    # testing
     # button_7 = Button(root, text='interval one hour', command=interval_one_hr).place(x=800, y=500)
 
-    # book follow up
+    # Add Book
     button_7 = Button(root, text='Add Book', command=new_book, font=('Helvetica', 13, 'bold'), width=20).place(x=400,
                                                                                                                y=360)
 
-    # book follow up
+    # Available Books
     button_7 = Button(root, text='Available Books', command=library, font=('Helvetica', 13, 'bold'), width=20).place(x=650, y=360)
 
-    # book follow up
+    # Performance analysis (Choose your period)
     button_7 = Button(root, text='Performance analysis (Choose your period)', command=your_interval, font=('Helvetica', 13, 'bold'),
-                      width=40).place(x=650, y=510)
-
-    button_7 = Button(root, text='One hour graph', command=one_hour_with_act_graph,
-                      font=('Helvetica', 13, 'bold'),
                       width=40).place(x=650, y=570)
 
-    # book follow up
+    # One hour graph
+    button_7 = Button(root, text='One hour graph', command=one_hour_with_act_graph,
+                      font=('Helvetica', 13, 'bold'),
+                      width=40).place(x=650, y=510)
+
+    # Add Weight
     button_7 = Button(root, text='Add Weight', command=weight, font=('Helvetica', 13, 'bold'), width=20).place(x=900,
                                                                                                                 y=180)
 
-    # book follow up
+    # Weight Analysis
     button_7 = Button(root, text='Weight Analysis', command=show_weight, font=('Helvetica', 13, 'bold'), width=20).place(
         x=900, y=240)
 
-    # book follow up
+    # View Wake up time
     button_7 = Button(root, text='View Wake up time', command=show_wake, font=('Helvetica', 13, 'bold'),
                       width=20).place(x=900, y=360)
 
-    # book follow up
+    # Enter Wake up time
     button_7 = Button(root, text='Enter Wake up time', command=wake, font=('Helvetica', 13, 'bold'), width=20).place(x=900, y=300)
     root.mainloop()
 
