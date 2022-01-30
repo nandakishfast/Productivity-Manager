@@ -34,15 +34,15 @@ They can also see hourly performance to gain insights about their most productiv
 
 ## Python Modules Required
 
-- sqlite3
-- datetime
-- tkinter
-- tkcalendar
-- webbrowser
-- numpy
-- time
-- matplotlib
-- PIL
+- sqlite3 (comes with the standard library)
+- datetime (pip install datetime)
+- tkinter (comes with the standard library)
+- tkcalendar (pip install tkcalendar)
+- webbrowser (comes with the standard library)
+- numpy (pip install numpy)
+- time (comes along with datetime)
+- matplotlib (pip install matplotlib)
+- PIL (pip install pillow)
 ## Authors
 
 - [Nanda Kishore B](https://github.com/nandakishfast)
