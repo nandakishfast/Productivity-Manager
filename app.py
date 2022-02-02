@@ -1035,14 +1035,14 @@ def CompletedActivity(user_id):
         root.iconphoto(False, PhotoImage(file=r'Window icons\codechef.GIF'))
 
         def p_status():
-            cur.execute('SELECT status_id FROM CODECHEF WHERE problem_tag=? ORDER BY status_id',
-                        (problem_tag.get(),))
+            cur.execute('SELECT status_id FROM CODECHEF WHERE problem_tag= ? AND activity_register IN (SELECT activity_register FROM ACTIVITIES_DONE WHERE user_id = ?)ORDER BY status_id ',
+                        (problem_tag.get(),user_id))
             res = cur.fetchall()
             print(res)
             text1 = ''
 
             if not res:
-                tkinter.messagebox.showinfo('INPUT ERROR', 'Please enter a valid problem tag')
+                tkinter.messagebox.showinfo('INPUT ERROR', 'Please enter a valid problem tag or you would have not completed that question')
             elif res[0][0] == 1:
                 tkinter.messagebox.showinfo("PROBLEM STATUS",
                                             "You have a successful submission for the problem {}".format(
@@ -1093,14 +1093,14 @@ def CompletedActivity(user_id):
         root.geometry("1290x660")
 
         def p_status():
-            cur.execute('SELECT status_id FROM CP_WEBSITES WHERE problem_link=? ORDER BY status_id',
-                        (problem_link.get(),))
+            cur.execute('SELECT status_id FROM CP_WEBSITES WHERE problem_link= ? AND activity_register IN (SELECT activity_register FROM ACTIVITIES_DONE WHERE user_id = ?) ORDER BY status_id',
+                        (problem_link.get(),user_id))
             res = cur.fetchall()
             print(res)
             text1 = ''
 
             if not res:
-                tkinter.messagebox.showinfo('INPUT ERROR', 'Please enter a valid problem tag')
+                tkinter.messagebox.showinfo('INPUT ERROR', 'Please enter a valid problem tag or you would have not completed that question')
             elif res[0][0] == 1:
                 tkinter.messagebox.showinfo("PROBLEM STATUS",
                                             "You have a successful submission for the problem {}".format(
