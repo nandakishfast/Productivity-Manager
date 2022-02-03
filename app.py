@@ -1578,6 +1578,12 @@ def CompletedActivity(user_id):
 
             my_scrollbar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=my_canvas.yview)
             my_scrollbar.pack(side=RIGHT, fill=Y)
+
+            def _on_mousewheel(event):
+                my_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+            my_canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
             my_canvas.configure(yscrollcommand=my_scrollbar.set)
             my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
 
@@ -2472,6 +2478,11 @@ def CompletedActivity(user_id):
 
         my_scrollbar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=my_canvas.yview)
         my_scrollbar.pack(side=RIGHT, fill=Y)
+        def _on_mousewheel(event):
+            my_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+        my_canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        
         my_canvas.configure(yscrollcommand=my_scrollbar.set)
         my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
 
@@ -2629,6 +2640,10 @@ def CompletedActivity(user_id):
 
         my_scrollbar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=my_canvas.yview)
         my_scrollbar.pack(side=RIGHT, fill=Y)
+        def _on_mousewheel(event):
+            my_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+        my_canvas.bind_all("<MouseWheel>", _on_mousewheel)
         my_canvas.configure(yscrollcommand=my_scrollbar.set)
         my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
 
