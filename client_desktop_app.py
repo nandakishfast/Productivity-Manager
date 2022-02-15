@@ -615,7 +615,7 @@ def CompletedActivity(user_id):
             if ranks:
                 table()
             y_value = 11
-            execute('SELECT user_name from USER,points WHERE user.user_id=points.user_id')
+            execute('SELECT user_name from USER ,(SELECT user_id FROM points GROUP BY user_id,date_ ORDER BY sum(follow_up_points+activity_points) DESC) as USERIDS WHERE USER.user_id = USERIDS.user_id')
             name_list = fetchall()
 
             names = []
@@ -2519,7 +2519,7 @@ def CompletedActivity(user_id):
             my_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
         my_canvas.bind_all("<MouseWheel>", _on_mousewheel)
-        
+
         my_canvas.configure(yscrollcommand=my_scrollbar.set)
         my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
 
