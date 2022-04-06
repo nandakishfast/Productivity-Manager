@@ -2482,7 +2482,7 @@ def CompletedActivity(user_id):
             my_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
         my_canvas.bind_all("<MouseWheel>", _on_mousewheel)
-        
+
         my_canvas.configure(yscrollcommand=my_scrollbar.set)
         my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
 
@@ -3231,23 +3231,32 @@ class AccountCreation(tk.Frame):
             if (password.get() != c_password.get()):
                 tkinter.messagebox.showerror('Error', 'The passwords do not match')
                 cnt = False
+            if ph_no.get() == '':
+                tkinter.messagebox.showerror('Error', 'Please enter a phone number')
+                cnt = False
+            if (ph_no.get()).isnumeric() == False:
+                tkinter.messagebox.showerror('Error', 'Phone number must be a number')
+                cnt = False
+            if len(ph_no.get()) != 10:
+                tkinter.messagebox.showerror('Error', 'Please enter a phone number of length 10')
+                cnt = False
 
             if cnt:
                 cur.execute('INSERT INTO USER VALUES (?,?,?,?,?,?,?)',
-                            (row_num, user_name.get(), password.get(), b_date, gender1, f_name.get(), l_name.get()))
+                            (row_num, user_name.get(), password.get(), b_date, gender1, f_name.get(), ph_no.get()))
                 conn.commit()
                 f_name.delete(0, END)
-                l_name.delete(0, END)
+                ph_no.delete(0, END)
                 password.delete(0, END)
                 c_password.delete(0, END)
                 user_name.delete(0, END)
                 tkinter.messagebox.showinfo('Success', 'Account created successfully')
 
-        tk.Label(self, text="First name : ", bg='#112938', fg='white', font=("Malgun Gothic", 15, 'bold')).place(x=300,
+        tk.Label(self, text="Name : ", bg='#112938', fg='white', font=("Malgun Gothic", 15, 'bold')).place(x=300,
                                                                                                                  y=120,
 
                                                                                                                  anchor='e')
-        tk.Label(self, text="Last name : ", bg='#112938', fg='white', font=("Malgun Gothic", 15, 'bold')).place(x=300,
+        tk.Label(self, text="Phone : ", bg='#112938', fg='white', font=("Malgun Gothic", 15, 'bold')).place(x=300,
                                                                                                                 y=160,
                                                                                                                 anchor='e')
         tk.Label(self, text="Date of birth : ", bg='#112938', fg='white', font=("Malgun Gothic", 15, 'bold')).place(
@@ -3287,8 +3296,8 @@ class AccountCreation(tk.Frame):
 
         f_name = tk.Entry(self, width=15, font=medium_font)
         f_name.place(x=300, y=120, anchor='w')
-        l_name = tk.Entry(self, width=15, font=medium_font)
-        l_name.place(x=300, y=160, anchor='w')
+        ph_no = tk.Entry(self, width=15, font=medium_font)
+        ph_no.place(x=300, y=160, anchor='w')
         cal1 = Calendar(self, font="Arial 14", selectmode='day', cursor="hand1")
         cal1.place(x=700, y=110)
         gender = tk.Entry(self, width=30)
