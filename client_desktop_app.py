@@ -3278,7 +3278,7 @@ class AccountCreation(tk.Frame):
             if len(ph_no.get()) != 10:
                 tkinter.messagebox.showerror('Error', 'Please enter a phone number of length 10')
                 cnt = False
-                
+
             if cnt:
                 execute('INSERT INTO USER VALUES (?,?,?,?,?,?,?)',
                             (row_num, user_name.get(), password.get(), b_date, gender1, f_name.get(), ph_no.get()))
@@ -3294,7 +3294,7 @@ class AccountCreation(tk.Frame):
                                                                                                                  y=120,
 
                                                                                                                  anchor='e')
-        tk.Label(self, text="Phone : ", bg='#112938', fg='white', font=("Malgun Gothic", 15, 'bold')).place(x=300,
+        tk.Label(self, text="Phone(only number) : ", bg='#112938', fg='white', font=("Malgun Gothic", 15, 'bold')).place(x=300,
                                                                                                                 y=160,
                                                                                                                 anchor='e')
         tk.Label(self, text="Date of birth : ", bg='#112938', fg='white', font=("Malgun Gothic", 15, 'bold')).place(
