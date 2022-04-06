@@ -577,7 +577,7 @@ def CompletedActivity(user_id):
             if ranks:
                 table()
             y_value = 11
-            cur.execute('SELECT user_name from USER,points WHERE user.user_id=points.user_id')
+            cur.execute('SELECT user_name from USER ,(SELECT user_id FROM points GROUP BY user_id,date_ ORDER BY sum(follow_up_points+activity_points) DESC) as USERIDS WHERE USER.user_id = USERIDS.user_id')
             name_list = cur.fetchall()
 
             names = []
